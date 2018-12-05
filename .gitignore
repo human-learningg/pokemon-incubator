@@ -1,0 +1,5 @@
+.DS_Store
+.vscode
+.idea
+training-data/*
+!training-data/.gitkeep
