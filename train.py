@@ -1,4 +1,7 @@
-from wgan import train, generate
+import dcgan
 
-train(5000, 100, False)
-generate(100)
+EPOCHS = 50
+BATCH_SIZE = 16
+
+dcgan.train(EPOCHS, BATCH_SIZE, weights=False)
+dcgan.generate(BATCH_SIZE)
