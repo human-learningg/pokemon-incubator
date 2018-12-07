@@ -5,18 +5,16 @@ import numpy as np
 from PIL import Image, ImageOps
 
 
-IMAGE_DIMENSION = 256
+IMAGE_DIMENSION = 128
 
 
 def load_data():
     print("Loading data")
     X_train = []
-    # paths = glob.glob(os.path.normpath(os.getcwd() + '/training-data/*.png'))
-    paths = glob.glob(os.path.normpath(os.getcwd() + '/training-data/raw/*.png'))
-    # paths = glob.glob(os.path.normpath(os.getcwd() + '/training-data/originals/*.png'))
+    paths = glob.glob(os.path.normpath(os.getcwd() + '/training-data/*.png'))
     for path in paths:
         im = Image.open(path)
-        # im = remove_alpha(im)
+        im = remove_alpha(im)
         im = ImageOps.fit(im, (IMAGE_DIMENSION, IMAGE_DIMENSION), Image.ANTIALIAS)
         # im = ImageOps.grayscale(im)
         # im.show()
@@ -26,13 +24,13 @@ def load_data():
     return np.array(X_train)
 
 
-# def remove_alpha(img):
-#     img.load()
-#
-#     bg = Image.new('RGB', img.size, (255, 255, 255))
-#     bg.paste(img, mask=img.split()[3])
-#
-#     return bg
+def remove_alpha(img):
+    img.load()
+
+    bg = Image.new('RGB', img.size, (255, 255, 255))
+    bg.paste(img, mask=img.split()[3])
+
+    return bg
 
 
 def combine_images(generated_images):
