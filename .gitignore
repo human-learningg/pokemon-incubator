@@ -6,3 +6,5 @@ d.h5
 g.h5
 dirty1.png
 clean1.png
+training-data/*
+.ipynb_checkpoints

@@ -3,7 +3,7 @@ from keras.layers import Input, Dense, Reshape, Flatten, Dropout
 from keras.layers import BatchNormalization, Activation, ZeroPadding2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
-from keras.models import Sequential, Model
+from keras.models import Sequential, Model, load_model
 from keras.optimizers import RMSprop
 from utils import load_data
 
@@ -11,13 +11,16 @@ import keras.backend as K
 
 import matplotlib.pyplot as plt
 
-import sys
+import os
 
 import numpy as np
 
+gen_model_path = 'saved_model/generator.model'
+cri_model_path = 'saved_model/critic.model'
 
-class WGAN():
-    def __init__(self):
+
+class WGAN:
+    def __init__(self, load_saved=True):
         self.img_rows = 128
         self.img_cols = 128
         self.channels = 3
@@ -29,14 +32,18 @@ class WGAN():
         self.clip_value = 0.01
         optimizer = RMSprop(lr=0.00005)
 
-        # Build and compile the critic
-        self.critic = self.build_critic()
+        if load_saved and os.path.exists(gen_model_path) and os.path.exists(cri_model_path):
+            self.generator = load_model(gen_model_path, custom_objects={'wasserstein_loss': self.wasserstein_loss})
+            self.critic = load_model(cri_model_path, custom_objects={'wasserstein_loss': self.wasserstein_loss})
+        else:
+            # Build the generator
+            self.generator = self.build_generator()
+            # Build and compile the critic
+            self.critic = self.build_critic()
+
         self.critic.compile(loss=self.wasserstein_loss,
                             optimizer=optimizer,
                             metrics=['accuracy'])
-
-        # Build the generator
-        self.generator = self.build_generator()
 
         # The generator takes noise as input and generated imgs
         z = Input(shape=(self.latent_dim,))
@@ -53,6 +60,7 @@ class WGAN():
         self.combined.compile(loss=self.wasserstein_loss,
                               optimizer=optimizer,
                               metrics=['accuracy'])
+
 
     def wasserstein_loss(self, y_true, y_pred):
         return K.mean(y_true * y_pred)
@@ -167,8 +175,10 @@ class WGAN():
             # If at save interval => save generated image samples
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
+        self.generator.save(gen_model_path)
+        self.critic.save(cri_model_path)
 
-    def sample_images(self, epoch):
+    def sample_images(self, epoch=-1):
         # TODO: The output color might be wrong, fix it
         r, c = 5, 5
         noise = np.random.normal(0, 1, (r * c, self.latent_dim))
@@ -184,5 +194,9 @@ class WGAN():
                 axs[i, j].imshow(gen_imgs[cnt, :, :, 0])
                 axs[i, j].axis('off')
                 cnt += 1
-        fig.savefig("generated/epoch_%d.png" % epoch)
+        if epoch == -1:
+            fig.savefig("generated_imgs/sample.png")
+        else:
+            fig.savefig("generated_imgs/epoch_%d.png" % epoch)
         plt.close()
+
