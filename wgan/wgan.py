@@ -179,7 +179,6 @@ class WGAN:
         self.critic.save(cri_model_path)
 
     def sample_images(self, epoch=-1):
-        # TODO: The output color might be wrong, fix it
         r, c = 5, 5
         noise = np.random.normal(0, 1, (r * c, self.latent_dim))
         gen_imgs = self.generator.predict(noise)
