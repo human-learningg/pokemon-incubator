@@ -91,4 +91,5 @@ def parse_args():
     parser.add_argument('--batch-size', type=int, default=32)
     parser.add_argument('--sample-interval', type=int, default=50)
     parser.add_argument('--load-saved', type=bool, default=True)
+    parser.add_argument('--method', type=str, default='wgangp')
     return parser.parse_args()

@@ -8,5 +8,5 @@
 
 ```bash
 python train.py --epochs=100 --batch-size=32 \
-    --sample-interval=50 --load-saved=True
+    --sample-interval=50 --load-saved=True --method=wgangp
 ```

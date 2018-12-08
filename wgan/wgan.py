@@ -17,8 +17,10 @@ import numpy as np
 gen_model_path = 'saved_model/generator.model'
 cri_model_path = 'saved_model/critic.model'
 
+WGAN_GENERATED_DIRECTORY = 'generated_imgs/wgan'
 
-class WGAN:
+
+class WGAN(object):
     def __init__(self, load_saved=True):
         self.img_rows = 128
         self.img_cols = 128
@@ -183,6 +185,6 @@ class WGAN:
         gen_imgs = 0.5 * gen_imgs + 1
 
         if epoch == -1:
-            save_images(gen_imgs, [r, c], "generated_imgs/sample.png")
+            save_images(gen_imgs, [r, c], WGAN_GENERATED_DIRECTORY + "/sample.png")
         else:
-            save_images(gen_imgs, [r, c], "generated_imgs/epoch_%d.png" % epoch)
+            save_images(gen_imgs, [r, c], WGAN_GENERATED_DIRECTORY + "/epoch_%d.png" % epoch)
