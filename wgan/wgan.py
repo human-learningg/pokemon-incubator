@@ -5,7 +5,7 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
 from keras.models import Sequential, Model, load_model
 from keras.optimizers import RMSprop
-from utils import load_data
+from utils import load_data, save_images
 
 import keras.backend as K
 
@@ -187,16 +187,9 @@ class WGAN:
         # Rescale images 0 - 1
         gen_imgs = 0.5 * gen_imgs + 1
 
-        fig, axs = plt.subplots(r, c)
-        cnt = 0
-        for i in range(r):
-            for j in range(c):
-                axs[i, j].imshow(gen_imgs[cnt, :, :, 0])
-                axs[i, j].axis('off')
-                cnt += 1
         if epoch == -1:
-            fig.savefig("generated_imgs/sample.png")
+            save_images(gen_imgs, [r, c], "generated_imgs/sample.png")
         else:
-            fig.savefig("generated_imgs/epoch_%d.png" % epoch)
-        plt.close()
+            save_images(gen_imgs, [r, c], "generated_imgs/epoch_%d.png" % epoch)
+
 
