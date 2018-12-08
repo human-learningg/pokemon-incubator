@@ -1,3 +1,8 @@
+from utils import parse_args
 from wgan.wgan import WGAN
 
-WGAN().train(epochs=100, batch_size=32, sample_interval=50)
+
+args = parse_args()
+
+WGAN(load_saved=args.load_saved).train(epochs=args.epochs, batch_size=args.batch_size,
+                                       sample_interval=args.sample_interval)

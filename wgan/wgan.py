@@ -1,4 +1,8 @@
-from keras.datasets import mnist
+"""
+The code is taken and modified from https://github.com/eriklindernoren/Keras-GAN
+"""
+
+
 from keras.layers import Input, Dense, Reshape, Flatten, Dropout
 from keras.layers import BatchNormalization, Activation, ZeroPadding2D
 from keras.layers.advanced_activations import LeakyReLU
@@ -6,13 +10,8 @@ from keras.layers.convolutional import UpSampling2D, Conv2D
 from keras.models import Sequential, Model, load_model
 from keras.optimizers import RMSprop
 from utils import load_data, save_images
-
 import keras.backend as K
-
-import matplotlib.pyplot as plt
-
 import os
-
 import numpy as np
 
 gen_model_path = 'saved_model/generator.model'
@@ -60,7 +59,6 @@ class WGAN:
         self.combined.compile(loss=self.wasserstein_loss,
                               optimizer=optimizer,
                               metrics=['accuracy'])
-
 
     def wasserstein_loss(self, y_true, y_pred):
         return K.mean(y_true * y_pred)
@@ -122,8 +120,6 @@ class WGAN:
     def train(self, epochs, batch_size=128, sample_interval=50):
 
         # Load the dataset
-        # (X_train, _), (_, _) = mnist.load_data()
-
         X_train = load_data()
 
         # Rescale -1 to 1
@@ -190,5 +186,3 @@ class WGAN:
             save_images(gen_imgs, [r, c], "generated_imgs/sample.png")
         else:
             save_images(gen_imgs, [r, c], "generated_imgs/epoch_%d.png" % epoch)
-
-

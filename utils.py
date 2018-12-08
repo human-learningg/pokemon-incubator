@@ -1,6 +1,7 @@
 import os
 import glob
 import math
+import argparse
 import scipy.misc
 import numpy as np
 from PIL import Image, ImageOps
@@ -83,3 +84,11 @@ def imsave(images, size, path):
 def inverse_transform(images):
     return (images+1.)/2
 
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--epochs', type=int, default=100)
+    parser.add_argument('--batch-size', type=int, default=32)
+    parser.add_argument('--sample-interval', type=int, default=50)
+    parser.add_argument('--load-saved', type=bool, default=True)
+    return parser.parse_args()
