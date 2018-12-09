@@ -10,15 +10,15 @@ from keras.layers import Input, Dense, Reshape, Flatten, Dropout
 from keras.layers import BatchNormalization, Activation, ZeroPadding2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
-from keras.models import Sequential, Model
+from keras.models import Sequential, Model, load_model
 from keras.optimizers import RMSprop
 from functools import partial
-
 import keras.backend as K
-
 import numpy as np
+import os
 
-
+WGANGP_GEN_MODEL_PATH = 'saved_model/wgangp.gen.model'
+WGANGP_CRI_MODEL_PATH = 'saved_model/wgangp.cri.model'
 WGANGP_GENERATED_DIRECTORY = 'generated_imgs/wgangp'
 
 
@@ -31,7 +31,7 @@ class RandomWeightedAverage(_Merge):
 
 
 class WGANGP(object):
-    def __init__(self):
+    def __init__(self, load_saved=True):
         self.img_rows = 128
         self.img_cols = 128
         self.channels = 3
@@ -42,9 +42,18 @@ class WGANGP(object):
         self.n_critic = 5
         optimizer = RMSprop(lr=0.00005)
 
-        # Build the generator and critic
-        self.generator = self.build_generator()
-        self.critic = self.build_critic()
+        # # Build the generator and critic
+        # self.generator = self.build_generator()
+        # self.critic = self.build_critic()
+
+        if load_saved and os.path.exists(WGANGP_GEN_MODEL_PATH) and os.path.exists(WGANGP_CRI_MODEL_PATH):
+            self.generator = load_model(WGANGP_GEN_MODEL_PATH, custom_objects={'wasserstein_loss': self.wasserstein_loss})
+            self.critic = load_model(WGANGP_CRI_MODEL_PATH, custom_objects={'wasserstein_loss': self.wasserstein_loss})
+        else:
+            # Build the generator
+            self.generator = self.build_generator()
+            # Build and compile the critic
+            self.critic = self.build_critic()
 
         # -------------------------------
         # Construct Computational Graph
@@ -218,6 +227,8 @@ class WGANGP(object):
             # If at save interval => save generated image samples
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
+                self.generator.save(WGANGP_GEN_MODEL_PATH)
+                self.critic.save(WGANGP_CRI_MODEL_PATH)
 
     def sample_images(self, epoch):
         r, c = 5, 5
