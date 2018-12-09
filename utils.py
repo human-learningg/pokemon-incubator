@@ -1,3 +1,7 @@
+"""
+Some code is taken and modified from https://github.com/llSourcell/Pokemon_GAN/blob/master/utils.py
+"""
+
 import os
 import glob
 import math

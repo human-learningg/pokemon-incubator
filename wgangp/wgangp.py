@@ -1,6 +1,6 @@
-# Large amount of credit goes to:
-# https://github.com/keras-team/keras-contrib/blob/master/examples/improved_wgan.py
-# which I've used as a reference for this implementation
+"""
+The code is taken and modified from https://github.com/eriklindernoren/Keras-GAN
+"""
 
 from __future__ import print_function, division
 
