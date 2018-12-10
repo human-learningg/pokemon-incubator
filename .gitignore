@@ -1,5 +1,10 @@
 .DS_Store
 .vscode
 .idea
-training-data/*
-!training-data/.gitkeep
+__pycache__/
+d.h5
+g.h5
+dirty1.png
+clean1.png
+.ipynb_checkpoints
+*.pyc
