@@ -11,6 +11,14 @@ python train.py --epochs=100 --batch-size=32 \
     --sample-interval=50 --load-saved=True --method=wgangp
 ```
 
+## Example Results
+
+![epoch_850](examples/epoch_850.png)
+![epoch_1300](examples/epoch_1300.png)
+![epoch_6600](examples/epoch_6600.png)
+![epoch_7450](examples/epoch_7450.png)
+![epoch_17400](examples/epoch_17400.png)
+
 ## Credits
 
 The code [wgan](wgan/wgan.py) and [wgangp](wgangp/wgangp.py) are taken and modified 
